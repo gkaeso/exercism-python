@@ -16,5 +16,3 @@ class Clock:
     def __sub__(self, minutes: int):
         self.total -= minutes
         return self
-
-print(Clock(10,3) - 30)
