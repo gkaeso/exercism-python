@@ -14,26 +14,12 @@ BUNDLE_PRICES = {
 
 def total(basket):
     price: float = len(basket) * BOOK_PRICE
-    print(f'original={price}')
 
-    for max_size in range(5, 1, -1):
-        amount, remaining_books = 0, Counter(basket)
-        bundles = []
-        print(f'max_size={max_size}')
-        for size in range(max_size, 1, -1):
-            while remaining_books:
-                bundle = tuple(book for book, _ in remaining_books.most_common(size))
-                if bundle:
-                    bundles.append(bundle)
-                    print(f'bundles={bundles}')
-                    remaining_books -= Counter(book for book, _ in remaining_books.most_common(size))
-                else:
-                    break
-                amount += BUNDLE_PRICES[len(bundle)]
-
-        print(f'price={amount}')
-        price = min(price, amount)
+    book_counter = Counter(basket)
+    for max_size in range(len(book_counter), 1, -1):
+        remaining_book_counter = book_counter - Counter(book for book, _ in book_counter.most_common(max_size))
+        remaining_books = list(remaining_book_counter.elements())
+        price = min(price, BUNDLE_PRICES[max_size] + total(remaining_books))
 
     return price
 
-print(total([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5]))
